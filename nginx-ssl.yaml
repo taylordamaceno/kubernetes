@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-ssle
+  namespace: default
+  labels:
+    component: nginx-ssl
+    role: nginx-static
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: nginx-ssl
+        role: nginx-static
+    spec:
+      containers:
+      - name: nginx-ssl-pre
+        image: registry:port/nginx-ssl:latest 
+        volumeMounts:
+        - mountPath: /etc/nginx/ssl/
+          name: secret-volumep
+        - mountPath: /etc/nginx/conf.d/
+          name: configmap-volume
+      volumes:
+      - hostPath:
+          path: PATH_DIR/ssl/
+        name: secret-volumep
+      - hostPath: 
+          path: PATH_DIR/conf.d/
+        name: configmap-volume
