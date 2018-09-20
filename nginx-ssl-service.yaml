@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-ssl-service
+  namespace: default
+  labels:
+    component: nginx-ssl
+    role: nginx-static-pre
+spec:
+  externalIPs:
+    - 192.168.1.X 
+  selector:
+    component: nginx-ssl-pre 
+    role: nginx-static-pre
+  ports:
+  - name: nginx-http
+    port: 80
+    protocol: TCP
+  - name: nginx-https
+    port: 443
+    protocol: TCP
