@@ -5,13 +5,13 @@ metadata:
   namespace: default
   labels:
     component: nginx-ssl
-    role: nginx-static-pre
+    role: nginx-static
 spec:
   externalIPs:
     - 192.168.1.X 
   selector:
-    component: nginx-ssl-pre 
-    role: nginx-static-pre
+    component: nginx-ssl
+    role: nginx-static
   ports:
   - name: nginx-http
     port: 80
