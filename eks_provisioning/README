@@ -1,0 +1,3 @@
+creating eks cluster
+eksctl create cluster -f taylao.yaml
+

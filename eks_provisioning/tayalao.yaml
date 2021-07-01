@@ -1,0 +1,50 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: taylao-cluster 
+  region: us-east-1
+vpc:
+  id: "vpc-id"
+  cidr: "10.0.0.0/16"
+  clusterEndpoints:
+    publicAccess: true
+    privateAccess: true
+  publicAccessCIDRs: ["publicIp"]
+  subnets:
+    private:
+      us-east-1b:
+          id: "subnet-id"
+          cidr: "10.0.16.0/20"
+    public:
+      us-east-1b:
+          id: "subnet-id"
+          cidr: "10.0.33.0/24"
+nodeGroups:
+  - name: ig-nodesapp
+    privateNetworking: true
+    securityGroups:
+      attachIDs: ["sg-id"]
+    minSize: 3
+    maxSize: 6
+    desiredCapacity: 3
+    subnets:
+      - us-east-1b
+    volumeType: gp3
+    volumeSize: 70
+    ssh:
+      publicKeyPath: /opt/ssh-keys/taylaok8s.pub
+    instancesDistribution:
+      maxPrice: 0.0752
+      instanceTypes: ["t3.xlarge","t3a.xlarge","m5a.xlarge"] # At least two instance types should be specified
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 50
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        imageBuilder: true
+        externalDNS: true
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
