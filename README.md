@@ -9,3 +9,5 @@ EKS provisioned script
 deployment fluentd
 #
 Deployment kafka mirror maker
+#
+Keycloak deployment
