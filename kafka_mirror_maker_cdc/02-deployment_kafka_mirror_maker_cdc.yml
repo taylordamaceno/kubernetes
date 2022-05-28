@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-mirror-maker-cdc
+  namespace: kafka-mirror-maker-cdc
+  labels:
+    name: kafka-mirror-maker-cdc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: kafka-mirror-maker-cdc
+  template:
+    metadata:
+      labels:
+        app: kafka-mirror-maker-cdc
+    spec:
+      containers:
+      - name: kafka-mirror-maker-cdc
+        image: ambuds/mirror-maker:latest
+        env:
+          - name: KAFKA_HEAP_OPTS
+            value: "-Xms512M -Xmx2048M"
+          - name: KAFKA_MM_WHITELIST
+            value: '^(prd\..*\.dbo\..*|topic_domain_events|topic_domain_commands)$'
+          - name: KAFKA_MM_NUMSTREAMS
+            value: "1"
+        resources:
+          limits:
+            memory: "2048Mi"
+          requests:
+            memory: "512Mi"
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/mirror-maker
+      volumes:
+        - name: config-volume
+          configMap:
+            name: kafka-mirror-maker-cdc-files

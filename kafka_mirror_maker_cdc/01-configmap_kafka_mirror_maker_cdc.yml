@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-mirror-maker-cdc-files
+  namespace: kafka-mirror-maker-cdc
+data:
+  consumer.properties: |-
+    bootstrap.servers=kafka-server19092,kafka-server2:9092
+    group.id=mirrormaker_cdc_group
+    auto.offset.reset=earliest
+    exclude.internal.topics=true
+    partition.assignment.strategy=org.apache.kafka.clients.consumer.RoundRobinAssignor
+  producer.properties: |-
+    bootstrap.servers=kafka-server3:9092,kafka-server4:9092
+    compression.type=gzip
+    linger.ms=10000
+    max.request.size=2097152
+    batch.size=2097152
+    buffer.memory=200000000
+    max.in.flight.requests.per.connection=5
+    acks=all
+    enable.idempotence=true
+    send.buffer.bytes=100000000
