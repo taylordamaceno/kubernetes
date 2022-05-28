@@ -1,0 +1,22 @@
+# Atenção este recurso precisa conter o namespace de cada Keycloak para que possa funcionar com um único CRB
+apiVersion: rbac.loginorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: jgroups-kubeping-api-access
+roleRef:
+  apiGroup: rbac.loginorization.k8s.io
+  kind: ClusterRole
+  name: jgroups-kubeping-pod-reader
+subjects:
+- kind: ServiceAccount
+  name: jgroups-kubeping-service-account
+  namespace: keycloak-login-cluster
+- kind: ServiceAccount
+  name: jgroups-kubeping-service-account
+  namespace: keycloakqa-login-cluster
+- kind: ServiceAccount
+  name: jgroups-kubeping-service-account
+  namespace: keycloakauto-login-cluster
+- kind: ServiceAccount
+  name: jgroups-kubeping-service-account
+  namespace: keycloakpre-login-cluster
