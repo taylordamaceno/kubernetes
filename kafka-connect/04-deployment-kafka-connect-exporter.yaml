@@ -1,0 +1,72 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: kafka-connect-exporter
+  name: kafka-connect-exporter-deployment
+  namespace: kafka-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-connect-exporter
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "9400"
+        prometheus.io/scrape: "true"
+      creationTimestamp: null
+      labels:
+        app: kafka-connect-exporter
+    spec:
+      containers:
+      - env:
+        - name: KAFKA_CONNECT_HOST
+          value: http://kafka-connect-service.kafka-connect.svc.cluster.local:80
+        image: zenreach/kafka-connect-exporter
+        imagePullPolicy: Always
+        name: kafka-connect-exporter
+        ports:
+        - containerPort: 9400
+          protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafka-connect-exporter
+  name: kafka-connect-exporter
+  namespace: kafka-exporter
+  selfLink: /api/v1/namespaces/kafka-exporter/services/kafka-connect-exporter
+  uid: abfeaea0-3ee2-11ea-80b1-0acd2b238e27
+spec:
+  clusterIP: $IP_CLUSTER 
+  ports:
+  - name: http
+    port: 9312
+    protocol: TCP
+    targetPort: 9400
+  selector:
+    app: kafka-connect-exporter
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
