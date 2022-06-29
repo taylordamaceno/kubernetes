@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: restproxy-ingress
+  namespace: develop-domain 
+spec:
+  rules:
+  - host: restproxydomain.blabla.com
+    http:
+      paths:
+      - backend:
+          serviceName: kafkadomain-cloud-proxy
+          servicePort: 8082
+        path: /
+  tls:
+  - hosts:
+    - restproxydomain.blabla.com
+status:
+  loadBalancer:
+    ingress:
+    - hostname: internal-a1c1c89e673c611ea86930acd2b238e2-1090044634.us-east-1.elb.amazonaws.com
+
