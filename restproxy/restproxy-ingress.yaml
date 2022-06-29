@@ -5,7 +5,7 @@ metadata:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /
   name: restproxy-ingress
-  namespace: develop-domain 
+  namespace: restproxy 
 spec:
   rules:
   - host: restproxydomain.blabla.com
@@ -21,5 +21,5 @@ spec:
 status:
   loadBalancer:
     ingress:
-    - hostname: internal-a1c1c89e673c611ea86930acd2b238e2-1090044634.us-east-1.elb.amazonaws.com
+    - hostname: loadbalanceurl 
 
